@@ -20,7 +20,7 @@ Les spécifications suivantes sont intégrées dans les manifests du repository 
 - **Exposition réseau local** : Port **`8097`** (Service K8s `LoadBalancer` ➔ port conteneur `8096`)
 - **Stockage de configuration** : Répertoire dédié `/stockage/k8s-jellyfin-config` (duplicata étanche de `/stockage/library` pour garantir l'indépendance du conteneur Docker original)
 - **Stockage médias** : Montages transparents vers `/data/montage1`, `/data/montage2`, `/data/montage3`, `/data/stockage`
-- **Image applicative** : `lscr.io/linuxserver/jellyfin:10.11.11-ls44` (tag immuable conforme à [normeetprojet.md](file:///d:/devia/argocd/argocd/normeetprojet.md))
+- **Image applicative** : `lscr.io/linuxserver/jellyfin:10.11.11ubu2604-ls44` (tag immuable conforme à [normeetprojet.md](file:///d:/devia/argocd/argocd/normeetprojet.md))
 - **Droits internes** : `PUID=1000`, `PGID=1000`
 
 ---
@@ -101,7 +101,7 @@ Toutes les étapes ci-dessous sont réalisées **exclusivement en local dans ce 
 - Déclaration des volumes pour les disques médias (`/montage1`, `/montage2`, `/montage3`, `/stockage`).
 
 #### 1.2. `deployment.yaml`
-- Image : `lscr.io/linuxserver/jellyfin:10.11.11-ls44`
+- Image : `lscr.io/linuxserver/jellyfin:10.11.11ubu2604-ls44`
 - Ciblage du nœud : `nodeSelector: kubernetes.io/hostname: linux2`
 - Variables d'environnement :
   - `PUID: "1000"`

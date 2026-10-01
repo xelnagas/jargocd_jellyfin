@@ -30,7 +30,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: jellyfin
-          image: lscr.io/linuxserver/jellyfin:10.11.11-ls44
+          image: lscr.io/linuxserver/jellyfin:10.11.11ubu2604-ls44
           imagePullPolicy: IfNotPresent
           env:
             - name: PUID

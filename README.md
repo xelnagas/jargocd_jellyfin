@@ -6,7 +6,7 @@ Ce repository constitue la **source unique de vérité (Single Source of Truth -
 
 ## 📌 Architecture & Spécifications
 
-- **Application** : Jellyfin Media Server (`lscr.io/linuxserver/jellyfin:10.11.11-ls44`)
+- **Application** : Jellyfin Media Server (`lscr.io/linuxserver/jellyfin:10.11.11ubu2604-ls44`)
 - **Port d'exposition local** : **`8097`** (via Service `LoadBalancer` natif K3s Klipper)
 - **Port conteneur interne** : `8096`
 - **Nœud d'exécution** : Assignation stricte sur `linux2` (`nodeSelector: kubernetes.io/hostname: linux2`)
