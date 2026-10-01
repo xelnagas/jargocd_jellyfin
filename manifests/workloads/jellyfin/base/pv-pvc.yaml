@@ -7,6 +7,8 @@ metadata:
     app.kubernetes.io/component: storage
     app.kubernetes.io/part-of: media-stack
     app.kubernetes.io/managed-by: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   capacity:
     storage: 20Gi
@@ -35,6 +37,8 @@ metadata:
     app.kubernetes.io/component: storage
     app.kubernetes.io/part-of: media-stack
     app.kubernetes.io/managed-by: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   accessModes:
     - ReadWriteOnce
