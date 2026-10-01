@@ -7,7 +7,7 @@ Ce guide décrit la procédure pour configurer et stocker les secrets requis dan
 ## 📌 1. Accès à l'Interface GitHub Secrets
 
 1. Rendez-vous sur votre repository GitHub :  
-   `https://github.com/xelnagas/argocd`
+   `https://github.com/xelnagas/jargocd_jellyfin`
 2. Cliquez sur l'onglet **Settings** (Paramètres).
 3. Dans le menu de gauche, développez **Secrets and variables** > **Actions**.
 4. Cliquez sur le bouton vert **New repository secret**.
@@ -16,9 +16,9 @@ Ce guide décrit la procédure pour configurer et stocker les secrets requis dan
 
 ## 🔑 2. Liste des Secrets à Configurer
 
-### 2.1. `SSH_PRIVATE_KEY` (Requis pour Argo CD)
+### 2.1. `SSH_PRIVATE_KEY` (Requis pour Argo CD si repo privé)
 - **Nom du secret** : `SSH_PRIVATE_KEY`
-- **Description** : Clé privée SSH d'authentification pour cloner le dépôt Git depuis le serveur `192.168.1.160`.
+- **Description** : Clé privée SSH (Deploy Key ou clé `id_ed25519`) permettant à Argo CD de cloner le dépôt `xelnagas/jargocd_jellyfin`.
 - **Valeur** : Contenu complet de votre clé privée locale (`C:\Users\julien\.ssh\id_ed25519`) incluant les en-têtes :
   ```text
   -----BEGIN OPENSSH PRIVATE KEY-----

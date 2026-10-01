@@ -13,8 +13,8 @@ Ce document définit la structure, le contenu et les étapes de construction de 
 
 ### 1.1. Données de Référence de l'Environnement Cible
 Les spécifications suivantes sont intégrées dans les manifests du repository pour assurer la continuité de service et la compatibilité totale avec le Jellyfin existant :
-- **Serveur Git cible** : `ssh://julien@192.168.1.160/home/julien/argocd.git`
-- **Authentification SSH** : Clé utilisateur `id_ed25519`
+- **Repository Git (GitHub)** : `https://github.com/xelnagas/jargocd_jellyfin.git`
+- **Authentification SSH** : Clé utilisateur `id_ed25519` (Deploy Key sur GitHub si privé)
 - **Gestionnaire des secrets** : **GitHub Secrets** (`Settings > Secrets and variables > Actions`)
 - **Nœud d'exécution Kubernetes** : `linux2` (`192.168.1.160`) via `nodeSelector`
 - **Exposition réseau local** : Port **`8097`** (Service K8s `LoadBalancer` ➔ port conteneur `8096`)
@@ -137,7 +137,7 @@ Toutes les étapes ci-dessous sont réalisées **exclusivement en local dans ce 
 
 ### Étape 3 : Création de l'Application Argo CD (`apps/workloads/jellyfin.yaml`)
 Déclaration de l'objet `Application` Argo CD :
-- `source.repoURL`: `ssh://julien@192.168.1.160/home/julien/argocd.git`
+- `source.repoURL`: `https://github.com/xelnagas/jargocd_jellyfin.git`
 - `source.targetRevision`: `main`
 - `source.path`: `manifests/workloads/jellyfin/overlays/prod`
 - `destination.server`: `https://kubernetes.default.svc`
@@ -172,28 +172,22 @@ Finalisation de l'état du repository avec un commit propre documentant l'arbore
 *Ces étapes sont fournies à titre indicatif pour l'administrateur du cluster. Elles ne sont pas exécutées par ce projet.*
 
 1. **Sur GitHub : Enregistrer les secrets**
-   - Se rendre sur `https://github.com/xelnagas/argocd/settings/secrets/actions`
+   - Se rendre sur `https://github.com/xelnagas/jargocd_jellyfin/settings/secrets/actions`
    - Ajouter `SSH_PRIVATE_KEY` avec le contenu de `id_ed25519`.
 
-2. **Sur le serveur `192.168.1.160` : Préparer le dépôt bare**
-   ```bash
-   mkdir -p /home/julien/argocd.git && git init --bare /home/julien/argocd.git
-   ```
-
-3. **Sur le serveur `192.168.1.160` : Initialiser la copie d'état Jellyfin**
+2. **Sur le serveur `192.168.1.160` : Initialiser la copie d'état Jellyfin**
    ```bash
    mkdir -p /stockage/k8s-jellyfin-config
    rsync -aPv --delete /stockage/library/ /stockage/k8s-jellyfin-config/
    chown -R 1000:1000 /stockage/k8s-jellyfin-config
    ```
 
-4. **Depuis ce poste : Pousser le repository**
+3. **Depuis ce poste : Pousser vers GitHub**
    ```powershell
-   git remote add server ssh://julien@192.168.1.160/home/julien/argocd.git
-   git push -u server main
+   git push -u origin main
    ```
 
-5. **Déployer l'application dans Argo CD**
+4. **Déployer l'application dans Argo CD**
    ```bash
    kubectl apply -f apps/workloads/jellyfin.yaml
    ```
