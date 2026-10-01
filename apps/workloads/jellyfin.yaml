@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: jellyfin
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: jellyfin
+    app.kubernetes.io/part-of: media-stack
+    env: prod
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: ssh://julien@192.168.1.160/home/julien/argocd.git
+    targetRevision: main
+    path: manifests/workloads/jellyfin/overlays/prod
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: jellyfin
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PruneLast=true

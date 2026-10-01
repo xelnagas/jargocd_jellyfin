@@ -1,0 +1,105 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jellyfin
+  labels:
+    app.kubernetes.io/name: jellyfin
+    app.kubernetes.io/component: media-server
+    app.kubernetes.io/part-of: media-stack
+    app.kubernetes.io/managed-by: argocd
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: jellyfin
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: jellyfin
+        app.kubernetes.io/component: media-server
+        app.kubernetes.io/part-of: media-stack
+        app.kubernetes.io/managed-by: argocd
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: linux2
+      securityContext:
+        fsGroup: 1000
+      containers:
+        - name: jellyfin
+          image: lscr.io/linuxserver/jellyfin:10.11.11-ls44
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Etc/UTC"
+            - name: JELLYFIN_PublishedServerUrl
+              value: "http://192.168.1.160:8097"
+          ports:
+            - name: http
+              containerPort: 8096
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 4000m
+              memory: 4Gi
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8096
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8096
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8096
+            periodSeconds: 15
+            timeoutSeconds: 3
+            failureThreshold: 3
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: media-montage1
+              mountPath: /data/montage1
+            - name: media-montage2
+              mountPath: /data/montage2
+            - name: media-montage3
+              mountPath: /data/montage3
+            - name: media-stockage
+              mountPath: /data/stockage
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: jellyfin-config-pvc
+        - name: media-montage1
+          hostPath:
+            path: /montage1
+            type: Directory
+        - name: media-montage2
+          hostPath:
+            path: /montage2
+            type: Directory
+        - name: media-montage3
+          hostPath:
+            path: /montage3
+            type: Directory
+        - name: media-stockage
+          hostPath:
+            path: /stockage
+            type: Directory
